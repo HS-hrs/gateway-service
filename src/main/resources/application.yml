@@ -1,14 +1,36 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: gateway-service
+  cloud:
+    gateway:
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/user/**
+            - id: employee-service
+              uri: lb://EMPLOYEE-SERVICE
+              predicates:
+                - Path=/employee/**
+            - id: vacation-service
+              uri: lb://VACATION-SERVICE
+              predicates:
+                - Path=/vacation/**
   output:
     ansi:
-      enabled: always
-server:
-  port: 8080
+          enabled: always
+
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8000/eureka
+      defaultZone: http://localhost:8761/eureka
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
