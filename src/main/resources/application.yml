@@ -19,10 +19,6 @@ spring:
               uri: lb://VACATION-SERVICE
               predicates:
                 - Path=/vacation/**
-            - id: config-server
-              uri: lb://CONFIG-SERVER
-              predicates:
-                - Path=/config/**
   output:
     ansi:
       enabled: always
