@@ -1,24 +1,54 @@
 server:
   port: 8080
 
+springdoc:
+  swagger-ui:
+    urls:
+      - name: user-service
+        url: http://localhost:8080/user/v3/api-docs
+      - name: employee-service
+        url: http://localhost:8080/employee/v3/api-docs
+      - name: vacation-service
+        url: http://localhost:8080/vacation/v3/api-docs
+
 spring:
   application:
     name: gateway-service
   cloud:
     gateway:
-          routes:
-            - id: user-service
-              uri: lb://USER-SERVICE
-              predicates:
-                - Path=/user/**
-            - id: employee-service
-              uri: lb://EMPLOYEE-SERVICE
-              predicates:
-                - Path=/employee/**
-            - id: vacation-service
-              uri: lb://VACATION-SERVICE
-              predicates:
-                - Path=/vacation/**
+        routes:
+          - id: user-service
+            uri: lb://USER-SERVICE
+            predicates:
+              - Path=/user/**
+          - id: user-service-swagger
+            uri: lb://USER-SERVICE
+            predicates:
+              - Path=/user-service/v3/api-docs/**
+            filters:
+              - RewritePath=/user-service/(?<segment>.*), /$\{segment} 
+              #/user-service/ 다음에 오는 모든 문자열 캡처하여 segment에 저장
+              #캡처한 segment를 사용하여 실제 경로로 리다이렉트
+          - id: employee-service
+            uri: lb://EMPLOYEE-SERVICE
+            predicates:
+              - Path=/employee/**
+          - id: employee-service-swagger
+            uri: lb://EMPLOYEE-SERVICE
+            predicates:
+              - Path=/employee-service/v3/api-docs/**
+            filters:
+              - RewritePath=/employee-service/(?<segment>.*), /$\{segment}  
+          - id: vacation-service
+            uri: lb://VACATION-SERVICE
+            predicates:
+              - Path=/vacation/**
+          - id: vacation-service-swagger
+            uri: lb://VACATION-SERVICE
+            predicates:
+                - Path=/vacation-service/v3/api-docs/**
+            filters:
+              - RewritePath=/vacation-service/(?<segment>.*), /$\{segment}  
   output:
     ansi:
       enabled: always
