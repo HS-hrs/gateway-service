@@ -48,7 +48,7 @@ spring:
           - id: vacation-service
             uri: lb://VACATION-SERVICE
             predicates:
-              - Path=/vacation/**
+              - Path=/vacation/** , /attendance/**
   output:
     ansi:
       enabled: always
